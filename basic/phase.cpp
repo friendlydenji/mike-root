@@ -1,6 +1,1 @@
-enum class Phase
-{
-    EarlyMorning,
-    Morning,
-    Night
-};
+#include "types.hpp"

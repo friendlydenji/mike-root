@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#173f35">
+  <title>Gout — Woodland Table</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <main id="app">
+    <section id="lobby" class="lobby">
+      <div class="brand-block">
+        <p class="edition">A woodland strategy game</p>
+        <h1>Gout</h1>
+        <p class="brand-copy">Rule the clearings. Outmaneuver the rival faction.</p>
+      </div>
+      <div class="lobby-actions" aria-label="Game lobby">
+        <form id="create-form" class="lobby-form">
+          <h2>Create table</h2>
+          <label for="create-name">Player name</label>
+          <input id="create-name" name="name" maxlength="24" autocomplete="nickname" required>
+          <button type="submit">Create room</button>
+        </form>
+        <form id="join-form" class="lobby-form">
+          <h2>Join table</h2>
+          <label for="join-name">Player name</label>
+          <input id="join-name" name="name" maxlength="24" autocomplete="nickname" required>
+          <label for="room-code">Room code</label>
+          <input id="room-code" name="code" maxlength="6" autocomplete="off" required>
+          <button type="submit">Join room</button>
+        </form>
+      </div>
+    </section>
+
+    <section id="game" class="game hidden">
+      <header class="topbar">
+        <div>
+          <span class="wordmark">Gout</span>
+          <button id="room-code-button" class="room-code" title="Copy room code"></button>
+        </div>
+        <div class="turn-status">
+          <span id="phase-label"></span>
+          <strong id="active-label"></strong>
+          <span id="actions-label"></span>
+        </div>
+        <button id="leave-button" class="quiet-button">Leave</button>
+      </header>
+
+      <div class="game-layout">
+        <aside class="score-panel">
+          <h2>Factions</h2>
+          <div id="players"></div>
+          <div class="event-log">
+            <span>Latest event</span>
+            <p id="event-text"></p>
+          </div>
+        </aside>
+
+        <section id="table-view" class="board-shell" aria-label="Game table">
+          <svg id="board" viewBox="0 0 950 870" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Autumn game board"></svg>
+          <div id="waiting" class="waiting hidden">
+            <p>Waiting for the second faction</p>
+            <strong id="waiting-code"></strong>
+          </div>
+        </section>
+
+        <aside class="action-panel">
+          <h2>Command</h2>
+          <div class="mode-control" role="group" aria-label="Action mode">
+            <button type="button" class="mode active" data-mode="move">Move</button>
+            <button type="button" class="mode" data-mode="battle">Battle</button>
+          </div>
+
+          <form id="move-form" class="action-form">
+            <label for="move-from">Origin</label>
+            <select id="move-from" name="from"></select>
+            <label for="move-to">Destination</label>
+            <select id="move-to" name="to"></select>
+            <label for="warrior-count">Warriors</label>
+            <input id="warrior-count" name="warriors" type="number" min="1" max="25" value="1">
+            <button type="submit">Move warriors</button>
+          </form>
+
+          <form id="battle-form" class="action-form hidden">
+            <label for="battle-clearing">Clearing</label>
+            <select id="battle-clearing" name="clearing"></select>
+            <button type="submit">Start battle</button>
+          </form>
+
+          <button id="phase-button" class="phase-button">Advance phase</button>
+          <p id="control-note" class="control-note"></p>
+        </aside>
+
+        <section id="hand-panel" class="hand-panel" aria-label="Your cards">
+          <div class="hand-side hand-side-left">
+            <header>
+              <h2>Your hand</h2>
+              <span id="deck-count"></span>
+            </header>
+            <div id="hand-left" class="card-hand"></div>
+          </div>
+          <div id="faction-board-view" class="faction-board-view hidden">
+            <div id="faction-board-canvas" class="faction-board-canvas">
+              <img id="faction-board-image" alt="">
+              <div id="faction-board-pieces" class="faction-board-pieces"></div>
+            </div>
+            <button id="flip-board-button" class="flip-board-button" type="button">Flip board</button>
+          </div>
+          <div class="hand-side hand-side-right">
+            <div id="hand-right" class="card-hand"></div>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+  <dialog id="card-dialog" class="card-dialog">
+    <button id="card-dialog-close" class="card-dialog-close" type="button" aria-label="Close">&times;</button>
+    <img id="card-dialog-image" alt="">
+    <strong id="card-dialog-title"></strong>
+  </dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="/app.js" defer></script>
+</body>
+</html>

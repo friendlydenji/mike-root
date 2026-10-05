@@ -1,0 +1,672 @@
+{
+  "source": "Root PNP (Final) Base Cards (Fronts).pdf",
+  "dpi": 300,
+  "cardCount": 95,
+  "cards": [
+    {
+      "id": "bird-ambush-1",
+      "title": "Bird Ambush",
+      "group": "shared-deck",
+      "sourcePage": 1,
+      "file": "cards/shared-deck/bird-ambush-1.png"
+    },
+    {
+      "id": "bird-ambush-2",
+      "title": "Bird Ambush",
+      "group": "shared-deck",
+      "sourcePage": 2,
+      "file": "cards/shared-deck/bird-ambush-2.png"
+    },
+    {
+      "id": "birdy-bindle",
+      "title": "Birdy Bindle",
+      "group": "shared-deck",
+      "sourcePage": 3,
+      "file": "cards/shared-deck/birdy-bindle.png"
+    },
+    {
+      "id": "armorers-1",
+      "title": "Armorers",
+      "group": "shared-deck",
+      "sourcePage": 4,
+      "file": "cards/shared-deck/armorers-1.png"
+    },
+    {
+      "id": "armorers-2",
+      "title": "Armorers",
+      "group": "shared-deck",
+      "sourcePage": 5,
+      "file": "cards/shared-deck/armorers-2.png"
+    },
+    {
+      "id": "woodland-runners",
+      "title": "Woodland Runners",
+      "group": "shared-deck",
+      "sourcePage": 6,
+      "file": "cards/shared-deck/woodland-runners.png"
+    },
+    {
+      "id": "arms-trader",
+      "title": "Arms Trader",
+      "group": "shared-deck",
+      "sourcePage": 7,
+      "file": "cards/shared-deck/arms-trader.png"
+    },
+    {
+      "id": "bird-crossbow",
+      "title": "Crossbow",
+      "group": "shared-deck",
+      "sourcePage": 8,
+      "file": "cards/shared-deck/bird-crossbow.png"
+    },
+    {
+      "id": "sappers-1",
+      "title": "Sappers",
+      "group": "shared-deck",
+      "sourcePage": 9,
+      "file": "cards/shared-deck/sappers-1.png"
+    },
+    {
+      "id": "sappers-2",
+      "title": "Sappers",
+      "group": "shared-deck",
+      "sourcePage": 10,
+      "file": "cards/shared-deck/sappers-2.png"
+    },
+    {
+      "id": "brutal-tactics-1",
+      "title": "Brutal Tactics",
+      "group": "shared-deck",
+      "sourcePage": 11,
+      "file": "cards/shared-deck/brutal-tactics-1.png"
+    },
+    {
+      "id": "brutal-tactics-2",
+      "title": "Brutal Tactics",
+      "group": "shared-deck",
+      "sourcePage": 12,
+      "file": "cards/shared-deck/brutal-tactics-2.png"
+    },
+    {
+      "id": "royal-claim",
+      "title": "Royal Claim",
+      "group": "shared-deck",
+      "sourcePage": 13,
+      "file": "cards/shared-deck/royal-claim.png"
+    },
+    {
+      "id": "fox-ambush",
+      "title": "Fox Ambush",
+      "group": "shared-deck",
+      "sourcePage": 14,
+      "file": "cards/shared-deck/fox-ambush.png"
+    },
+    {
+      "id": "gently-used-knapsack",
+      "title": "Gently Used Knapsack",
+      "group": "shared-deck",
+      "sourcePage": 15,
+      "file": "cards/shared-deck/gently-used-knapsack.png"
+    },
+    {
+      "id": "fox-root-tea",
+      "title": "Root Tea",
+      "group": "shared-deck",
+      "sourcePage": 16,
+      "file": "cards/shared-deck/fox-root-tea.png"
+    },
+    {
+      "id": "fox-travel-gear",
+      "title": "Travel Gear",
+      "group": "shared-deck",
+      "sourcePage": 17,
+      "file": "cards/shared-deck/fox-travel-gear.png"
+    },
+    {
+      "id": "protection-racket",
+      "title": "Protection Racket",
+      "group": "shared-deck",
+      "sourcePage": 18,
+      "file": "cards/shared-deck/protection-racket.png"
+    },
+    {
+      "id": "foxfolk-steel",
+      "title": "Foxfolk Steel",
+      "group": "shared-deck",
+      "sourcePage": 19,
+      "file": "cards/shared-deck/foxfolk-steel.png"
+    },
+    {
+      "id": "anvil",
+      "title": "Anvil",
+      "group": "shared-deck",
+      "sourcePage": 20,
+      "file": "cards/shared-deck/anvil.png"
+    },
+    {
+      "id": "stand-and-deliver-1",
+      "title": "Stand and Deliver!",
+      "group": "shared-deck",
+      "sourcePage": 21,
+      "file": "cards/shared-deck/stand-and-deliver-1.png"
+    },
+    {
+      "id": "stand-and-deliver-2",
+      "title": "Stand and Deliver!",
+      "group": "shared-deck",
+      "sourcePage": 22,
+      "file": "cards/shared-deck/stand-and-deliver-2.png"
+    },
+    {
+      "id": "tax-collector-1",
+      "title": "Tax Collector",
+      "group": "shared-deck",
+      "sourcePage": 23,
+      "file": "cards/shared-deck/tax-collector-1.png"
+    },
+    {
+      "id": "tax-collector-2",
+      "title": "Tax Collector",
+      "group": "shared-deck",
+      "sourcePage": 24,
+      "file": "cards/shared-deck/tax-collector-2.png"
+    },
+    {
+      "id": "tax-collector-3",
+      "title": "Tax Collector",
+      "group": "shared-deck",
+      "sourcePage": 25,
+      "file": "cards/shared-deck/tax-collector-3.png"
+    },
+    {
+      "id": "favor-of-the-foxes",
+      "title": "Favor of the Foxes",
+      "group": "shared-deck",
+      "sourcePage": 26,
+      "file": "cards/shared-deck/favor-of-the-foxes.png"
+    },
+    {
+      "id": "rabbit-ambush",
+      "title": "Rabbit Ambush",
+      "group": "shared-deck",
+      "sourcePage": 27,
+      "file": "cards/shared-deck/rabbit-ambush.png"
+    },
+    {
+      "id": "smugglers-trail",
+      "title": "Smuggler's Trail",
+      "group": "shared-deck",
+      "sourcePage": 28,
+      "file": "cards/shared-deck/smugglers-trail.png"
+    },
+    {
+      "id": "rabbit-root-tea",
+      "title": "Root Tea",
+      "group": "shared-deck",
+      "sourcePage": 29,
+      "file": "cards/shared-deck/rabbit-root-tea.png"
+    },
+    {
+      "id": "a-visit-to-friends",
+      "title": "A Visit to Friends",
+      "group": "shared-deck",
+      "sourcePage": 30,
+      "file": "cards/shared-deck/a-visit-to-friends.png"
+    },
+    {
+      "id": "bake-sale",
+      "title": "Bake Sale",
+      "group": "shared-deck",
+      "sourcePage": 31,
+      "file": "cards/shared-deck/bake-sale.png"
+    },
+    {
+      "id": "command-warren-1",
+      "title": "Command Warren",
+      "group": "shared-deck",
+      "sourcePage": 32,
+      "file": "cards/shared-deck/command-warren-1.png"
+    },
+    {
+      "id": "command-warren-2",
+      "title": "Command Warren",
+      "group": "shared-deck",
+      "sourcePage": 33,
+      "file": "cards/shared-deck/command-warren-2.png"
+    },
+    {
+      "id": "better-burrow-bank-1",
+      "title": "Better Burrow Bank",
+      "group": "shared-deck",
+      "sourcePage": 34,
+      "file": "cards/shared-deck/better-burrow-bank-1.png"
+    },
+    {
+      "id": "better-burrow-bank-2",
+      "title": "Better Burrow Bank",
+      "group": "shared-deck",
+      "sourcePage": 35,
+      "file": "cards/shared-deck/better-burrow-bank-2.png"
+    },
+    {
+      "id": "cobbler-1",
+      "title": "Cobbler",
+      "group": "shared-deck",
+      "sourcePage": 36,
+      "file": "cards/shared-deck/cobbler-1.png"
+    },
+    {
+      "id": "cobbler-2",
+      "title": "Cobbler",
+      "group": "shared-deck",
+      "sourcePage": 37,
+      "file": "cards/shared-deck/cobbler-2.png"
+    },
+    {
+      "id": "favor-of-the-rabbits",
+      "title": "Favor of the Rabbits",
+      "group": "shared-deck",
+      "sourcePage": 38,
+      "file": "cards/shared-deck/favor-of-the-rabbits.png"
+    },
+    {
+      "id": "mouse-ambush",
+      "title": "Mouse Ambush",
+      "group": "shared-deck",
+      "sourcePage": 39,
+      "file": "cards/shared-deck/mouse-ambush.png"
+    },
+    {
+      "id": "mouse-in-a-sack",
+      "title": "Mouse-in-a-Sack",
+      "group": "shared-deck",
+      "sourcePage": 40,
+      "file": "cards/shared-deck/mouse-in-a-sack.png"
+    },
+    {
+      "id": "mouse-root-tea",
+      "title": "Root Tea",
+      "group": "shared-deck",
+      "sourcePage": 41,
+      "file": "cards/shared-deck/mouse-root-tea.png"
+    },
+    {
+      "id": "mouse-travel-gear",
+      "title": "Travel Gear",
+      "group": "shared-deck",
+      "sourcePage": 42,
+      "file": "cards/shared-deck/mouse-travel-gear.png"
+    },
+    {
+      "id": "investments",
+      "title": "Investments",
+      "group": "shared-deck",
+      "sourcePage": 43,
+      "file": "cards/shared-deck/investments.png"
+    },
+    {
+      "id": "sword",
+      "title": "Sword",
+      "group": "shared-deck",
+      "sourcePage": 44,
+      "file": "cards/shared-deck/sword.png"
+    },
+    {
+      "id": "mouse-crossbow",
+      "title": "Crossbow",
+      "group": "shared-deck",
+      "sourcePage": 45,
+      "file": "cards/shared-deck/mouse-crossbow.png"
+    },
+    {
+      "id": "scouting-party-1",
+      "title": "Scouting Party",
+      "group": "shared-deck",
+      "sourcePage": 46,
+      "file": "cards/shared-deck/scouting-party-1.png"
+    },
+    {
+      "id": "scouting-party-2",
+      "title": "Scouting Party",
+      "group": "shared-deck",
+      "sourcePage": 47,
+      "file": "cards/shared-deck/scouting-party-2.png"
+    },
+    {
+      "id": "codebreakers-1",
+      "title": "Codebreakers",
+      "group": "shared-deck",
+      "sourcePage": 48,
+      "file": "cards/shared-deck/codebreakers-1.png"
+    },
+    {
+      "id": "codebreakers-2",
+      "title": "Codebreakers",
+      "group": "shared-deck",
+      "sourcePage": 49,
+      "file": "cards/shared-deck/codebreakers-2.png"
+    },
+    {
+      "id": "favor-of-the-mice",
+      "title": "Favor of the Mice",
+      "group": "shared-deck",
+      "sourcePage": 50,
+      "file": "cards/shared-deck/favor-of-the-mice.png"
+    },
+    {
+      "id": "rabbit-dominance",
+      "title": "Rabbit Dominance",
+      "group": "shared-deck",
+      "sourcePage": 51,
+      "file": "cards/shared-deck/rabbit-dominance.png"
+    },
+    {
+      "id": "mouse-dominance",
+      "title": "Mouse Dominance",
+      "group": "shared-deck",
+      "sourcePage": 52,
+      "file": "cards/shared-deck/mouse-dominance.png"
+    },
+    {
+      "id": "bird-dominance",
+      "title": "Bird Dominance",
+      "group": "shared-deck",
+      "sourcePage": 53,
+      "file": "cards/shared-deck/bird-dominance.png"
+    },
+    {
+      "id": "fox-dominance",
+      "title": "Fox Dominance",
+      "group": "shared-deck",
+      "sourcePage": 54,
+      "file": "cards/shared-deck/fox-dominance.png"
+    },
+    {
+      "id": "leader-commander",
+      "title": "Commander",
+      "group": "eyrie",
+      "sourcePage": 55,
+      "file": "cards/eyrie/leader-commander.png"
+    },
+    {
+      "id": "leader-despot",
+      "title": "Despot",
+      "group": "eyrie",
+      "sourcePage": 56,
+      "file": "cards/eyrie/leader-despot.png"
+    },
+    {
+      "id": "leader-builder",
+      "title": "Builder",
+      "group": "eyrie",
+      "sourcePage": 57,
+      "file": "cards/eyrie/leader-builder.png"
+    },
+    {
+      "id": "leader-charismatic",
+      "title": "Charismatic",
+      "group": "eyrie",
+      "sourcePage": 58,
+      "file": "cards/eyrie/leader-charismatic.png"
+    },
+    {
+      "id": "loyal-vizier-1",
+      "title": "Loyal Vizier",
+      "group": "eyrie",
+      "sourcePage": 59,
+      "file": "cards/eyrie/loyal-vizier-1.png"
+    },
+    {
+      "id": "loyal-vizier-2",
+      "title": "Loyal Vizier",
+      "group": "eyrie",
+      "sourcePage": 60,
+      "file": "cards/eyrie/loyal-vizier-2.png"
+    },
+    {
+      "id": "thief",
+      "title": "Thief",
+      "group": "vagabond",
+      "sourcePage": 61,
+      "file": "cards/vagabond/thief.png"
+    },
+    {
+      "id": "tinker",
+      "title": "Tinker",
+      "group": "vagabond",
+      "sourcePage": 62,
+      "file": "cards/vagabond/tinker.png"
+    },
+    {
+      "id": "ranger",
+      "title": "Ranger",
+      "group": "vagabond",
+      "sourcePage": 63,
+      "file": "cards/vagabond/ranger.png"
+    },
+    {
+      "id": "fox-fundraising",
+      "title": "Fundraising - Fox",
+      "group": "quests",
+      "sourcePage": 64,
+      "file": "cards/quests/fox-fundraising.png"
+    },
+    {
+      "id": "fox-errand",
+      "title": "Errand - Fox",
+      "group": "quests",
+      "sourcePage": 65,
+      "file": "cards/quests/fox-errand.png"
+    },
+    {
+      "id": "fox-logistics-help",
+      "title": "Logistics Help - Fox",
+      "group": "quests",
+      "sourcePage": 66,
+      "file": "cards/quests/fox-logistics-help.png"
+    },
+    {
+      "id": "fox-repair-a-shed",
+      "title": "Repair a Shed - Fox",
+      "group": "quests",
+      "sourcePage": 67,
+      "file": "cards/quests/fox-repair-a-shed.png"
+    },
+    {
+      "id": "fox-give-a-speech",
+      "title": "Give a Speech - Fox",
+      "group": "quests",
+      "sourcePage": 68,
+      "file": "cards/quests/fox-give-a-speech.png"
+    },
+    {
+      "id": "rabbit-guard-duty",
+      "title": "Guard Duty - Rabbit",
+      "group": "quests",
+      "sourcePage": 69,
+      "file": "cards/quests/rabbit-guard-duty.png"
+    },
+    {
+      "id": "rabbit-errand",
+      "title": "Errand - Rabbit",
+      "group": "quests",
+      "sourcePage": 70,
+      "file": "cards/quests/rabbit-errand.png"
+    },
+    {
+      "id": "rabbit-give-a-speech",
+      "title": "Give a Speech - Rabbit",
+      "group": "quests",
+      "sourcePage": 71,
+      "file": "cards/quests/rabbit-give-a-speech.png"
+    },
+    {
+      "id": "rabbit-fend-off-a-bear",
+      "title": "Fend off a Bear - Rabbit",
+      "group": "quests",
+      "sourcePage": 72,
+      "file": "cards/quests/rabbit-fend-off-a-bear.png"
+    },
+    {
+      "id": "rabbit-expel-bandits",
+      "title": "Expel Bandits - Rabbit",
+      "group": "quests",
+      "sourcePage": 73,
+      "file": "cards/quests/rabbit-expel-bandits.png"
+    },
+    {
+      "id": "mouse-expel-bandits",
+      "title": "Expel Bandits - Mouse",
+      "group": "quests",
+      "sourcePage": 74,
+      "file": "cards/quests/mouse-expel-bandits.png"
+    },
+    {
+      "id": "mouse-guard-duty",
+      "title": "Guard Duty - Mouse",
+      "group": "quests",
+      "sourcePage": 75,
+      "file": "cards/quests/mouse-guard-duty.png"
+    },
+    {
+      "id": "mouse-fend-off-a-bear",
+      "title": "Fend off a Bear - Mouse",
+      "group": "quests",
+      "sourcePage": 76,
+      "file": "cards/quests/mouse-fend-off-a-bear.png"
+    },
+    {
+      "id": "mouse-escort",
+      "title": "Escort - Mouse",
+      "group": "quests",
+      "sourcePage": 77,
+      "file": "cards/quests/mouse-escort.png"
+    },
+    {
+      "id": "mouse-logistics-help",
+      "title": "Logistics Help - Mouse",
+      "group": "quests",
+      "sourcePage": 78,
+      "file": "cards/quests/mouse-logistics-help.png"
+    },
+    {
+      "id": "eyrie",
+      "title": "Eyrie Walkthrough",
+      "group": "walkthrough",
+      "sourcePage": 79,
+      "file": "cards/walkthrough/eyrie.png"
+    },
+    {
+      "id": "vagabond",
+      "title": "Vagabond Walkthrough",
+      "group": "walkthrough",
+      "sourcePage": 80,
+      "file": "cards/walkthrough/vagabond.png"
+    },
+    {
+      "id": "woodland-alliance",
+      "title": "Woodland Alliance Walkthrough",
+      "group": "walkthrough",
+      "sourcePage": 81,
+      "file": "cards/walkthrough/woodland-alliance.png"
+    },
+    {
+      "id": "marquise-de-cat",
+      "title": "Marquise de Cat Walkthrough",
+      "group": "walkthrough",
+      "sourcePage": 82,
+      "file": "cards/walkthrough/marquise-de-cat.png"
+    },
+    {
+      "id": "marquise-de-cat",
+      "title": "Marquise de Cat Overview",
+      "group": "faction-overview",
+      "sourcePage": 83,
+      "file": "cards/faction-overview/marquise-de-cat.png"
+    },
+    {
+      "id": "woodland-alliance",
+      "title": "Woodland Alliance Overview",
+      "group": "faction-overview",
+      "sourcePage": 84,
+      "file": "cards/faction-overview/woodland-alliance.png"
+    },
+    {
+      "id": "eyrie",
+      "title": "Eyrie Dynasties Overview",
+      "group": "faction-overview",
+      "sourcePage": 85,
+      "file": "cards/faction-overview/eyrie.png"
+    },
+    {
+      "id": "vagabond",
+      "title": "Vagabond Overview",
+      "group": "faction-overview",
+      "sourcePage": 86,
+      "file": "cards/faction-overview/vagabond.png"
+    },
+    {
+      "id": "rabbit",
+      "title": "Rabbit Spy",
+      "group": "spy",
+      "sourcePage": 87,
+      "file": "cards/spy/rabbit.png"
+    },
+    {
+      "id": "mouse",
+      "title": "Mouse Spy",
+      "group": "spy",
+      "sourcePage": 88,
+      "file": "cards/spy/mouse.png"
+    },
+    {
+      "id": "bird",
+      "title": "Bird Spy",
+      "group": "spy",
+      "sourcePage": 89,
+      "file": "cards/spy/bird.png"
+    },
+    {
+      "id": "fox",
+      "title": "Fox Spy",
+      "group": "spy",
+      "sourcePage": 90,
+      "file": "cards/spy/fox.png"
+    },
+    {
+      "id": "arbiter",
+      "title": "Arbiter",
+      "group": "vagabond",
+      "sourcePage": 91,
+      "file": "cards/vagabond/arbiter.png"
+    },
+    {
+      "id": "scoundrel",
+      "title": "Scoundrel",
+      "group": "vagabond",
+      "sourcePage": 92,
+      "file": "cards/vagabond/scoundrel.png"
+    },
+    {
+      "id": "vagrant",
+      "title": "Vagrant",
+      "group": "vagabond",
+      "sourcePage": 93,
+      "file": "cards/vagabond/vagrant.png"
+    },
+    {
+      "id": "lizard-cult",
+      "title": "Lizard Cult Overview",
+      "group": "faction-overview",
+      "sourcePage": 94,
+      "file": "cards/faction-overview/lizard-cult.png"
+    },
+    {
+      "id": "riverfolk-company",
+      "title": "Riverfolk Company Overview",
+      "group": "faction-overview",
+      "sourcePage": 95,
+      "file": "cards/faction-overview/riverfolk-company.png"
+    }
+  ]
+}
