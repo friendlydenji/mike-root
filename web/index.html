@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#173f35">
-  <title>Gout — Woodland Table</title>
+  <title>mike-root — Woodland Table</title>
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
@@ -12,7 +12,7 @@
     <section id="lobby" class="lobby">
       <div class="brand-block">
         <p class="edition">A woodland strategy game</p>
-        <h1>Gout</h1>
+        <h1>mike-root</h1>
         <p class="brand-copy">Rule the clearings. Outmaneuver the rival faction.</p>
       </div>
       <div class="lobby-actions" aria-label="Game lobby">
@@ -36,21 +36,38 @@
     <section id="game" class="game hidden">
       <header class="topbar">
         <div>
-          <span class="wordmark">Gout</span>
+          <span class="wordmark">mike-root</span>
           <button id="room-code-button" class="room-code" title="Copy room code"></button>
         </div>
-        <div class="turn-status">
-          <span id="phase-label"></span>
-          <strong id="active-label"></strong>
-          <span id="actions-label"></span>
-        </div>
+        <div id="table-status" class="table-status"></div>
         <button id="leave-button" class="quiet-button">Leave</button>
       </header>
 
       <div class="game-layout">
         <aside class="score-panel">
-          <h2>Factions</h2>
+          <section class="turn-card" aria-live="polite">
+            <span class="panel-label">Current turn</span>
+            <strong id="active-label">Waiting room</strong>
+            <div class="phase-track" aria-label="Turn phase">
+              <span data-phase="Birdsong">Sáng sớm</span>
+              <span data-phase="Daylight">Ban ngày</span>
+              <span data-phase="Evening">Buổi tối</span>
+            </div>
+            <div id="actions-label" class="action-count"></div>
+          </section>
+
+          <div class="panel-heading">
+            <h2>Players</h2>
+            <span id="seat-count"></span>
+          </div>
           <div id="players"></div>
+          <section id="faction-status" class="faction-status hidden"></section>
+          <section id="crafted-items" class="crafted-items hidden" aria-label="Crafted items"></section>
+          <div id="waiting-actions" class="waiting-actions hidden">
+            <button id="start-game-button" type="button">Start game</button>
+            <p id="waiting-note"></p>
+          </div>
+          <button id="phase-button" class="phase-button" type="button">Next phase</button>
           <div class="event-log">
             <span>Latest event</span>
             <p id="event-text"></p>
@@ -58,57 +75,58 @@
         </aside>
 
         <section id="table-view" class="board-shell" aria-label="Game table">
+          <div id="phase-actions" class="phase-actions" aria-label="Phase actions"></div>
           <svg id="board" viewBox="0 0 950 870" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Autumn game board"></svg>
           <div id="waiting" class="waiting hidden">
-            <p>Waiting for the second faction</p>
+            <p>Waiting for the host to start</p>
             <strong id="waiting-code"></strong>
           </div>
-        </section>
-
-        <aside class="action-panel">
-          <h2>Command</h2>
-          <div class="mode-control" role="group" aria-label="Action mode">
-            <button type="button" class="mode active" data-mode="move">Move</button>
-            <button type="button" class="mode" data-mode="battle">Battle</button>
+          <div id="map-action" class="map-action hidden">
+            <button id="map-action-close" class="map-action-close" type="button" aria-label="Close">&times;</button>
+            <span id="map-action-suit" class="panel-label"></span>
+            <strong id="map-action-title"></strong>
+            <p id="map-action-summary"></p>
+            <select id="battle-defender" class="hidden" aria-label="Battle defender"></select>
+            <div id="map-action-buttons" class="map-action-buttons">
+              <button id="battle-button" type="button">Battle</button>
+              <button id="special-primary-button" class="hidden" type="button"></button>
+            </div>
+            <div id="move-controls" class="move-controls hidden">
+              <span id="move-hint"></span>
+              <div class="warrior-stepper">
+                <button id="warrior-minus" type="button" aria-label="Decrease warriors">-</button>
+                <input id="warrior-count" type="number" min="1" max="25" value="1" aria-label="Warriors">
+                <button id="warrior-plus" type="button" aria-label="Increase warriors">+</button>
+              </div>
+              <button id="cancel-move" class="quiet-map-button" type="button">Cancel</button>
+            </div>
           </div>
-
-          <form id="move-form" class="action-form">
-            <label for="move-from">Origin</label>
-            <select id="move-from" name="from"></select>
-            <label for="move-to">Destination</label>
-            <select id="move-to" name="to"></select>
-            <label for="warrior-count">Warriors</label>
-            <input id="warrior-count" name="warriors" type="number" min="1" max="25" value="1">
-            <button type="submit">Move warriors</button>
-          </form>
-
-          <form id="battle-form" class="action-form hidden">
-            <label for="battle-clearing">Clearing</label>
-            <select id="battle-clearing" name="clearing"></select>
-            <button type="submit">Start battle</button>
-          </form>
-
-          <button id="phase-button" class="phase-button">Advance phase</button>
-          <p id="control-note" class="control-note"></p>
-        </aside>
+        </section>
+        <section id="rules-panel" class="rules-panel hidden" aria-label="Faction and crafted card actions"></section>
 
         <section id="hand-panel" class="hand-panel" aria-label="Your cards">
-          <div class="hand-side hand-side-left">
+          <div class="hand-side">
             <header>
               <h2>Your hand</h2>
-              <span id="deck-count"></span>
+              <span id="hand-count"></span>
             </header>
-            <div id="hand-left" class="card-hand"></div>
+            <div id="hand-cards" class="card-hand"></div>
           </div>
           <div id="faction-board-view" class="faction-board-view hidden">
+            <div id="eyrie-decree-board" class="eyrie-decree-board hidden"></div>
             <div id="faction-board-canvas" class="faction-board-canvas">
               <img id="faction-board-image" alt="">
               <div id="faction-board-pieces" class="faction-board-pieces"></div>
             </div>
             <button id="flip-board-button" class="flip-board-button" type="button">Flip board</button>
           </div>
-          <div class="hand-side hand-side-right">
-            <div id="hand-right" class="card-hand"></div>
+          <div class="draw-pile">
+            <span class="panel-label">Draw pile</span>
+            <button id="deck-button" class="deck-button" type="button" title="Draw a card">
+              <img src="/assets/card_back.webp" alt="Shared deck">
+              <strong id="deck-count"></strong>
+            </button>
+            <span id="deck-note"></span>
           </div>
         </section>
       </div>
@@ -118,8 +136,50 @@
     <button id="card-dialog-close" class="card-dialog-close" type="button" aria-label="Close">&times;</button>
     <img id="card-dialog-image" alt="">
     <strong id="card-dialog-title"></strong>
+    <div id="card-dialog-actions" class="card-dialog-actions hidden">
+      <button id="apply-card-action" type="button"></button>
+      <div id="decree-card-actions" class="card-action-group decree-card-actions hidden">
+        <span>Add to Decree</span>
+        <button type="button" data-decree-column="Recruit">Recruit</button>
+        <button type="button" data-decree-column="Move">Move</button>
+        <button type="button" data-decree-column="Battle">Battle</button>
+        <button type="button" data-decree-column="Build">Build</button>
+      </div>
+    </div>
+  </dialog>
+  <dialog id="battle-dialog" class="battle-dialog">
+    <button id="battle-dialog-close" class="card-dialog-close" type="button" aria-label="Close">&times;</button>
+    <span class="panel-label">Battle result</span>
+    <strong id="battle-dialog-title"></strong>
+    <div class="dice-result">
+      <div>
+        <span id="attacker-name"></span>
+        <b id="attacker-die" class="battle-die">0</b>
+        <small id="attacker-hits"></small>
+      </div>
+      <div>
+        <span id="defender-name"></span>
+        <b id="defender-die" class="battle-die">0</b>
+        <small id="defender-hits"></small>
+      </div>
+    </div>
+    <button id="battle-roll-button" type="button">Start battle</button>
   </dialog>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <dialog id="rules-dialog" class="rules-dialog">
+    <button id="rules-dialog-close" class="card-dialog-close" type="button" aria-label="Close">&times;</button>
+    <h2 id="rules-dialog-title"></h2>
+    <div id="rules-filters" class="rules-filters"></div>
+    <label for="rule-choice">Action</label>
+    <select id="rule-choice"></select>
+    <div id="rule-preview" class="rule-preview"></div>
+    <button id="rule-confirm" type="button">Confirm</button>
+  </dialog>
+  <dialog id="response-dialog" class="rules-dialog">
+    <h2 id="response-title"></h2>
+    <div id="response-dice" class="response-dice"></div>
+    <div id="response-choices" class="response-choices"></div>
+  </dialog>
   <script src="/app.js" defer></script>
 </body>
 </html>

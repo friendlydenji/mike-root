@@ -4,6 +4,7 @@
 #include <map>
 #include <memory>
 #include <mutex>
+#include <optional>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -26,15 +27,25 @@ private:
     struct Player {
         std::string name;
         std::string token;
-        FactionId faction;
+        std::optional<FactionId> faction;
+    };
+
+    struct BattleEvent {
+        std::uint64_t revision{};
+        FactionId attacker{FactionId::Count};
+        FactionId defender{FactionId::Count};
+        int clearing{};
+        BattleResult result;
     };
 
     struct Room {
         std::string code;
         std::vector<Player> players;
         std::unique_ptr<SingleGame> game;
+        std::string hostToken;
         std::uint64_t revision{1};
         std::string lastEvent{"Waiting for another player"};
+        std::optional<BattleEvent> lastBattle;
     };
 
     std::mutex mutex_;
@@ -42,6 +53,7 @@ private:
 
     ApiResponse createRoom(const Parameters& parameters);
     ApiResponse joinRoom(const Parameters& parameters);
+    ApiResponse startRoom(const Parameters& parameters);
     ApiResponse getState(const Parameters& parameters);
     ApiResponse performAction(const Parameters& parameters);
     Room& requireRoom(const Parameters& parameters);

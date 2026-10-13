@@ -82,23 +82,22 @@ void Map::clearPieces() {
 
 Map Map::autumn() {
     Map map;
-    map.addClearing("Northwest", Suit::Rabbit, 1);
-    map.addClearing("North", Suit::Fox, 2);
-    map.addClearing("Northeast", Suit::Mouse, 1);
+    map.addClearing("Northwest", Suit::Fox, 1);
+    map.addClearing("North", Suit::Rabbit, 2);
+    map.addClearing("Northeast", Suit::Mouse, 2);
     map.addClearing("West", Suit::Mouse, 2);
-    map.addClearing("Central West", Suit::Fox, 2, true);
-    map.addClearing("Central East", Suit::Rabbit, 2, true);
-    map.addClearing("East", Suit::Fox, 1);
-    map.addClearing("Southwest", Suit::Fox, 1);
-    map.addClearing("South", Suit::Mouse, 2);
+    map.addClearing("Central West", Suit::Rabbit, 2, true);
+    map.addClearing("Central East", Suit::Mouse, 3, true);
+    map.addClearing("East", Suit::Fox, 2, true);
+    map.addClearing("Southwest", Suit::Rabbit, 1);
+    map.addClearing("South", Suit::Fox, 2, true);
     map.addClearing("Southeast", Suit::Rabbit, 1);
-    map.addClearing("Lower West", Suit::Rabbit, 2, true);
-    map.addClearing("Lower East", Suit::Mouse, 2, true);
+    map.addClearing("Lower West", Suit::Fox, 2);
+    map.addClearing("Lower East", Suit::Mouse, 2);
 
     const int roads[][2] = {
-        {0,1},{0,3},{1,2},{1,4},{2,5},{2,6},{3,4},{3,7},{4,5},{4,8},
-        {4,10},{5,6},{5,8},{5,11},{6,9},{7,8},{7,10},{8,9},{8,10},{8,11},
-        {9,11},{10,11}
+        {0,1},{0,3},{0,4},{1,2},{2,4},{2,6},{3,7},{3,8},{4,8},
+        {5,6},{5,8},{5,9},{6,9},{7,8},{7,10},{8,11},{9,11},{10,11}
     };
     for (const auto& road : roads) map.connect(road[0], road[1]);
     return map;

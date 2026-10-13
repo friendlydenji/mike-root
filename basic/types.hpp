@@ -14,7 +14,8 @@ enum class FactionId {
 };
 
 enum class PieceType { Warrior, Building, Token };
-enum class Phase { Birdsong, Daylight, Evening };
+enum class Phase { Setup, Birdsong, Daylight, Evening };
+enum class CatBuilding { Sawmill, Workshop, Recruiter };
 
 constexpr std::size_t factionIndex(FactionId faction) {
     return static_cast<std::size_t>(faction);
