@@ -197,6 +197,31 @@ int main() {
     assert(catGame.actionsRemaining() == 0 && catGame.catState().marchMovesRemaining == 0);
     expectFailure([&] { catGame.move(FactionId::MarquiseDeCat, 3, 0, 1); });
 
+    SingleGame multiWarriorMarch({FactionId::MarquiseDeCat, FactionId::EyrieDynasties}, 34, SetupMode::Preset);
+    multiWarriorMarch.produceWood(FactionId::MarquiseDeCat);
+    multiWarriorMarch.advancePhase();
+    multiWarriorMarch.placePiece(FactionId::MarquiseDeCat, PieceType::Warrior, 0, 4);
+    const int warriorsAtZero = multiWarriorMarch.map().clearing(0).pieces(
+        FactionId::MarquiseDeCat, PieceType::Warrior);
+    const int warriorsAtOne = multiWarriorMarch.map().clearing(1).pieces(
+        FactionId::MarquiseDeCat, PieceType::Warrior);
+    const int warriorsAtTwo = multiWarriorMarch.map().clearing(2).pieces(
+        FactionId::MarquiseDeCat, PieceType::Warrior);
+    multiWarriorMarch.move(FactionId::MarquiseDeCat, 0, 1, 3);
+    assert(multiWarriorMarch.map().clearing(0).pieces(
+        FactionId::MarquiseDeCat, PieceType::Warrior) == warriorsAtZero - 3);
+    assert(multiWarriorMarch.map().clearing(1).pieces(
+        FactionId::MarquiseDeCat, PieceType::Warrior) == warriorsAtOne + 3);
+    assert(multiWarriorMarch.actionsRemaining() == 2);
+    assert(multiWarriorMarch.catState().marchMovesRemaining == 1);
+    multiWarriorMarch.move(FactionId::MarquiseDeCat, 1, 2, 2);
+    assert(multiWarriorMarch.map().clearing(1).pieces(
+        FactionId::MarquiseDeCat, PieceType::Warrior) == warriorsAtOne + 1);
+    assert(multiWarriorMarch.map().clearing(2).pieces(
+        FactionId::MarquiseDeCat, PieceType::Warrior) == warriorsAtTwo + 2);
+    assert(multiWarriorMarch.actionsRemaining() == 2);
+    assert(multiWarriorMarch.catState().marchMovesRemaining == 0);
+
     SingleGame disconnectedGame({FactionId::MarquiseDeCat, FactionId::EyrieDynasties}, 22, SetupMode::Preset);
     disconnectedGame.produceWood(FactionId::MarquiseDeCat);
     disconnectedGame.advancePhase();

@@ -14,6 +14,14 @@ std::string jsonValue(const std::string& body, const std::string& key) {
     return body.substr(valueStart, end - valueStart);
 }
 
+std::size_t countOccurrences(const std::string& text, const std::string& needle) {
+    std::size_t count = 0;
+    for (std::size_t offset = 0; (offset = text.find(needle, offset)) != std::string::npos; offset += needle.size()) {
+        ++count;
+    }
+    return count;
+}
+
 int main() {
     RoomService rooms;
 
@@ -76,8 +84,16 @@ int main() {
     ++revision;
     assert(setupAction(catsToken, "place_setup_recruiter", 3).status == 200);
     ++revision;
+    const auto roostState = rooms.handle("GET", "/api/state", {
+        {"code", code}, {"token", eyrieToken}
+    });
+    assert(roostState.status == 200);
+    assert(roostState.body.find("\"phaseActions\":[\"place_roost\"]") != std::string::npos);
+    assert(countOccurrences(roostState.body, "\"actions\":[\"place_roost\"]") == 1);
     assert(setupAction(eyrieToken, "place_roost", 2).status == 409);
-    assert(setupAction(eyrieToken, "place_roost", 9).status == 200);
+    const auto roost = setupAction(eyrieToken, "place_roost", 9);
+    assert(roost.status == 200);
+    assert(roost.body.find("\"phaseActions\":[\"choose_eyrie_leader\"]") != std::string::npos);
     ++revision;
     const auto setupLeader = rooms.handle("POST", "/api/action", {
         {"code", code}, {"token", eyrieToken}, {"revision", std::to_string(revision)},

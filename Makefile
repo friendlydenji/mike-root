@@ -11,7 +11,7 @@ CORE = $(GAME_CORE) \
 SERVER = server/room_service.cpp server/http_server.cpp server/main.cpp
 HEADERS = $(shell find basic server -name '*.hpp')
 
-.PHONY: all test run clean
+.PHONY: all test qa run clean
 
 all: test build/mike-root_server
 
@@ -36,6 +36,9 @@ test: build/root_tests build/server_tests build/rule_tests
 	./build/server_tests
 	./build/rule_tests
 	node tests/web_test.js
+
+qa: test build/mike-root_server
+	node tests/qa_test.js
 
 run: build/mike-root_server
 	./build/mike-root_server $(PORT) $(WEB_ROOT)

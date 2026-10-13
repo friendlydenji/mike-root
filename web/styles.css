@@ -326,6 +326,9 @@ button[type="submit"], .phase-button, #start-game-button {
 .piece-art { filter: drop-shadow(0 2px 2px rgba(0,0,0,.55)); }
 .piece-count-bg { fill: #fffefa; stroke: #18211f; stroke-width: 2; }
 .piece-count { text-anchor: middle; fill: #18211f; font-size: 12px; font-weight: 850; }
+.warrior-count-bg { fill: #fffefa; stroke: #18211f; stroke-width: 2.5; }
+.warrior-count { text-anchor: middle; fill: #111917; font-size: 15px; font-weight: 900; }
+.warrior-piece .piece-art { filter: drop-shadow(0 2px 2px rgba(0,0,0,.65)); }
 
 .waiting {
   position: absolute;
@@ -376,9 +379,12 @@ button[type="submit"], .phase-button, #start-game-button {
   color: var(--ink);
   font-weight: 800;
 }
-.move-controls { display: grid; grid-template-columns: 1fr auto; gap: 9px; align-items: center; }
+.move-controls { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 9px; align-items: end; }
 .move-controls > span { grid-column: 1 / -1; color: #d9e3de; font-size: 12px; }
-.warrior-stepper { display: grid; grid-template-columns: 34px 52px 34px; }
+.warrior-picker { min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 5px 10px; align-items: center; }
+.warrior-picker label { grid-column: 1 / -1; color: #fff; font-size: 12px; font-weight: 800; }
+.warrior-picker output { min-width: 48px; color: #f1d467; font-size: 13px; font-weight: 900; text-align: right; }
+.warrior-stepper { display: grid; grid-template-columns: 36px 58px 36px minmax(58px, auto); }
 .warrior-stepper button, .warrior-stepper input {
   min-height: 36px;
   border: 1px solid #879991;
@@ -387,6 +393,7 @@ button[type="submit"], .phase-button, #start-game-button {
 }
 .warrior-stepper button { background: #eef0e9; color: var(--ink); font-weight: 800; }
 .warrior-stepper input { padding: 4px; }
+.warrior-stepper .warrior-all { margin-left: 7px; border-radius: 4px; }
 
 .hand-panel {
   min-width: 0;

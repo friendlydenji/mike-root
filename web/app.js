@@ -23,6 +23,7 @@ const actionLabels = {
 };
 const setupLabels = { place_keep: "Đặt Keep", place_buildings: "Đặt building khởi đầu", place_roost: "Đặt Roost khởi đầu", choose_leader: "Chọn leader", choose_character: "Chọn nhân vật", place_pawn: "Đặt pawn vào rừng" };
 const setupCatalog = { place_keep: ["place_keep"], place_buildings: ["place_setup_sawmill", "place_setup_workshop", "place_setup_recruiter"], place_roost: ["place_roost"], choose_leader: ["choose_eyrie_leader"] };
+const setupMapActions = new Set(["place_keep", "place_roost", "place_setup_sawmill", "place_setup_workshop", "place_setup_recruiter"]);
 const phaseCatalog = {
   "Marquise de Cat": { Birdsong: ["produce_wood"], Daylight: ["craft", "move", "battle", "recruit", "build_sawmill", "build_workshop", "build_recruiter", "overwork", "spend_bird", "finish_march"] },
   "Eyrie Dynasties": { Birdsong: ["choose_eyrie_leader", "add_to_decree", "new_roost"], Daylight: ["craft", "recruit", "move", "battle", "build_roost"] },
@@ -170,8 +171,8 @@ const elements = Object.fromEntries([
   "faction-board-canvas", "faction-board-image", "faction-board-pieces",
   "flip-board-button", "map-action", "map-action-close", "map-action-suit",
   "map-action-title", "map-action-summary", "map-action-buttons",
-  "battle-button", "move-controls", "move-hint", "warrior-count", "warrior-minus",
-  "warrior-plus", "cancel-move", "special-primary-button",
+  "battle-button", "move-controls", "move-hint", "warrior-picker", "warrior-count", "warrior-minus",
+  "warrior-plus", "warrior-all", "warrior-selected", "cancel-move", "special-primary-button",
   "faction-status", "card-dialog-actions",
   "decree-card-actions", "battle-dialog",
   "battle-dialog-close", "battle-dialog-title", "attacker-name", "attacker-die",
@@ -274,13 +275,12 @@ async function startGame() {
     const result = await api("/api/rooms/start", "POST", app.session);
     app.state = result.state;
     app.boardSide = "front";
-    render();
   } catch (error) {
     notify(error.message);
     await refreshState();
   } finally {
     app.busy = false;
-    if (app.state?.status !== "waiting") { renderRules(); renderResponse(); }
+    if (app.state) render();
   }
 }
 
@@ -300,7 +300,12 @@ async function refreshState() {
       const started = app.state?.status === "waiting" && result.state.status !== "waiting";
       if (started) app.boardSide = "front";
       app.busy = true;
-      try { await presentState(result.state); } finally { app.busy = false; }
+      try {
+        await presentState(result.state);
+      } finally {
+        app.busy = false;
+        if (app.state) render();
+      }
     }
   } catch (error) {
     window.clearInterval(app.pollTimer);
@@ -425,6 +430,10 @@ function render() {
   elements["faction-board-view"].classList.remove("hidden");
   if (!(state.phaseActions || []).includes(app.activeAction)
       && !state.ruleActions?.some(rule => rule.type === app.activeAction)) app.activeAction = null;
+  if (state.phase === "Setup" && yourTurn && !app.busy && !app.activeAction) {
+    const availableSetupActions = (state.phaseActions || []).filter(action => setupMapActions.has(action));
+    if (availableSetupActions.length === 1) app.activeAction = availableSetupActions[0];
+  }
   if (!mapActionMode() || (app.selected !== null
       && !clearingActions(state.clearings[app.selected]).includes(app.activeAction))) {
     app.selected = null;
@@ -841,14 +850,14 @@ function renderBoard() {
       if (!counts) return [];
       const [xOffset, yOffset] = style.offset;
       if (faction === "Marquise de Cat") {
-        return [renderPiece(style.warrior, counts.warriors, xOffset, yOffset, "Cats warriors"),
+        return [renderPiece(style.warrior, counts.warriors, xOffset, yOffset, "Cats warriors", true),
           ...Object.entries(clearing.catBuildings || {}).map(([type, count], index) =>
             renderPiece(`/assets/${type}.png`, count, xOffset + index * 27, yOffset + 36, type)),
           renderPiece("/assets/wood.png", clearing.wood, xOffset, yOffset + 68, "Wood"),
           renderPiece("/assets/keep.png", clearing.keep, xOffset + 28, yOffset + 68, "Keep")];
       }
       return [
-        renderPiece(style.warrior, counts.warriors, xOffset, yOffset, `${faction} warriors`),
+        renderPiece(style.warrior, counts.warriors, xOffset, yOffset, `${faction} warriors`, true),
         renderPiece(faction === "Woodland Alliance" ? `/assets/${clearing.suit}_base.png` : style.building, counts.buildings, xOffset, yOffset + 39, `${faction} buildings`),
         renderPiece(style.token, counts.tokens, xOffset + 28, yOffset + 39, `${faction} tokens`)
       ];
@@ -873,12 +882,16 @@ function renderBoard() {
   elements.board.innerHTML = `<image class="board-map" href="/assets/map_autumn.webp" width="950" height="870"></image><g>${forestNodes}${nodes.join("")}</g>`;
 }
 
-function renderPiece(source, count, x, y, label) {
+function renderPiece(source, count, x, y, label, warrior = false) {
   if (!count) return "";
-  return `<g class="piece" transform="translate(${x} ${y})">
+  const countMarker = warrior
+    ? `<rect class="warrior-count-bg" x="17" y="-10" width="44" height="23" rx="5"></rect>
+      <text class="warrior-count" x="39" y="7">&#215;${count}</text>`
+    : `<circle class="piece-count-bg" cx="34" cy="5" r="10"></circle>
+      <text class="piece-count" x="34" y="9">${count}</text>`;
+  return `<g class="piece${warrior ? " warrior-piece" : ""}" transform="translate(${x} ${y})">
     <image class="piece-art" href="${source}" width="40" height="40"></image>
-    <circle class="piece-count-bg" cx="34" cy="5" r="10"></circle>
-    <text class="piece-count" x="34" y="9">${count}</text>
+    ${countMarker}
     <title>${label}: ${count}</title>
   </g>`;
 }
@@ -928,7 +941,11 @@ function selectClearing(id) {
   }
   const actions = clearingActions(app.state.clearings[id]);
   if (!actions.includes(app.activeAction)) {
-      notify(`Clearing không hợp lệ cho ${actionLabels[app.activeAction]}`);
+    notify(`Clearing không hợp lệ cho ${actionLabels[app.activeAction]}`);
+    return;
+  }
+  if (app.state.phase === "Setup" && setupMapActions.has(app.activeAction)) {
+    sendAction(app.activeAction, { clearing: id });
     return;
   }
   app.selected = app.selected === id ? null : id;
@@ -993,15 +1010,19 @@ function renderMapAction() {
   elements["move-controls"].classList.toggle("hidden", app.moveOrigin === null);
 
   if (app.moveOrigin !== null) {
-    elements["move-hint"].textContent = app.moveAction === "slip"
-      ? "Chọn clearing liền kề để Slip"
-      : "Chọn clearing được đánh dấu trên map";
-    elements["warrior-count"].max = faction === "Vagabond" ? 1 : ownPieces.warriors;
-    elements["warrior-count"].classList.toggle("hidden", faction === "Vagabond");
-    elements["warrior-minus"].classList.toggle("hidden", faction === "Vagabond");
-    elements["warrior-plus"].classList.toggle("hidden", faction === "Vagabond");
-    if (Number(elements["warrior-count"].value) > ownPieces.warriors) {
-      elements["warrior-count"].value = ownPieces.warriors;
+    const fixedPawnMove = faction === "Vagabond";
+    elements["warrior-picker"].classList.toggle("hidden", fixedPawnMove);
+    elements["warrior-count"].max = fixedPawnMove ? 1 : ownPieces.warriors;
+    const selectedWarriors = normalizeWarriorCount();
+    elements["warrior-selected"].textContent = `${selectedWarriors} / ${elements["warrior-count"].max}`;
+    const marchMove = faction === "Marquise de Cat"
+      ? app.state.factionState?.marchMovesRemaining ? "March · move 2/2" : "March · move 1/2"
+      : actionLabels[app.moveAction];
+    elements["move-hint"].textContent = fixedPawnMove
+      ? "Slip · clearing đích được đánh dấu"
+      : `${marchMove} · clearing đích được đánh dấu`;
+    if (!fixedPawnMove) {
+      elements["map-action-summary"].textContent = `${selectedWarriors} / ${ownPieces.warriors} warrior đã chọn`;
     }
   }
 }
@@ -1034,9 +1055,22 @@ function closeMapAction() {
 
 function stepWarriors(delta) {
   const input = elements["warrior-count"];
+  input.value = normalizeWarriorCount() + delta;
+  renderMapAction();
+}
+
+function normalizeWarriorCount() {
+  const input = elements["warrior-count"];
   const minimum = Number(input.min) || 1;
   const maximum = Number(input.max) || 25;
-  input.value = Math.min(maximum, Math.max(minimum, Number(input.value || 1) + delta));
+  const requested = Number.isFinite(Number(input.value)) ? Math.floor(Number(input.value)) : minimum;
+  input.value = Math.min(maximum, Math.max(minimum, requested));
+  return Number(input.value);
+}
+
+function selectAllWarriors() {
+  elements["warrior-count"].value = elements["warrior-count"].max;
+  renderMapAction();
 }
 
 function openBattle() {
@@ -1130,6 +1164,8 @@ elements["cancel-move"].addEventListener("click", cancelMove);
 elements["map-action-close"].addEventListener("click", closeMapAction);
 elements["warrior-minus"].addEventListener("click", () => stepWarriors(-1));
 elements["warrior-plus"].addEventListener("click", () => stepWarriors(1));
+elements["warrior-all"].addEventListener("click", selectAllWarriors);
+elements["warrior-count"].addEventListener("input", renderMapAction);
 elements["leave-button"].addEventListener("click", leaveGame);
 elements["room-code-button"].addEventListener("click", async () => {
   await navigator.clipboard?.writeText(app.state.code);

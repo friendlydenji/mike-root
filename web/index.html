@@ -93,10 +93,15 @@
             </div>
             <div id="move-controls" class="move-controls hidden">
               <span id="move-hint"></span>
-              <div class="warrior-stepper">
-                <button id="warrior-minus" type="button" aria-label="Decrease warriors">-</button>
-                <input id="warrior-count" type="number" min="1" max="25" value="1" aria-label="Warriors">
-                <button id="warrior-plus" type="button" aria-label="Increase warriors">+</button>
+              <div id="warrior-picker" class="warrior-picker">
+                <label for="warrior-count">Warrior di chuyển</label>
+                <div class="warrior-stepper">
+                  <button id="warrior-minus" type="button" aria-label="Decrease warriors">&minus;</button>
+                  <input id="warrior-count" type="number" min="1" max="25" value="1" inputmode="numeric" aria-label="Warriors to move">
+                  <button id="warrior-plus" type="button" aria-label="Increase warriors">+</button>
+                  <button id="warrior-all" class="warrior-all" type="button">Tất cả</button>
+                </div>
+                <output id="warrior-selected" for="warrior-count">1 / 1</output>
               </div>
               <button id="cancel-move" class="quiet-map-button" type="button">Cancel</button>
             </div>

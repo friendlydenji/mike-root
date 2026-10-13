@@ -56,6 +56,8 @@ context.stateFixture = {
 run('app.state = stateFixture; app.session = { code: "TEST12", token: "test" }; render();');
 assert.ok(nodes.get('special-primary-button').listeners.click, 'Map confirmation must be registered');
 assert.ok(nodes.get('flip-board-button').listeners.click, 'A missing action ID must not prevent the flip listener');
+assert.match(nodes.get('board').innerHTML, /warrior-piece/, 'Warrior stacks need a distinct count marker');
+assert.match(nodes.get('board').innerHTML, /&#215;2/, 'The map must show the full warrior count');
 
 nodes.get('flip-board-button').listeners.click();
 assert.match(nodes.get('faction-board-image').src, /backboardgame/);
@@ -73,11 +75,19 @@ run('selectClearing(0)');
 assert.equal(run('app.moveOrigin'), null, 'Clicking the origin must cancel the move');
 
 (async () => {
-  run('selectClearing(0); selectClearing(1)');
+  run('selectClearing(0)');
+  assert.equal(nodes.get('warrior-count').max, 2, 'Move quantity must match warriors at the origin');
+  assert.equal(nodes.get('warrior-selected').textContent, '1 / 2');
+  nodes.get('warrior-all').listeners.click();
+  assert.equal(nodes.get('warrior-count').value, 2, 'All must select every warrior at the origin');
+  assert.equal(nodes.get('warrior-selected').textContent, '2 / 2');
+  assert.match(nodes.get('move-hint').textContent, /move 1\/2/, 'Cats must see which March move they are choosing');
+  run('selectClearing(1)');
   await new Promise(resolve => setTimeout(resolve, 10));
   assert.equal(requests.length, 1);
   assert.equal(requests[0].action, 'move');
   assert.equal(requests[0].to, '1');
+  assert.equal(requests[0].warriors, '2', 'The selected warrior quantity must reach the server');
 
   run('app.state.phaseActions = ["move", "build_sawmill", "overwork", "spend_bird"]; app.state.clearings[1].actions = ["build_sawmill"];');
   run('selectAction("move"); selectClearing(0); selectAction("build_sawmill")');
@@ -145,15 +155,56 @@ assert.equal(run('app.moveOrigin'), null, 'Clicking the origin must cancel the m
     setup: { step: 'place_keep', keep: null, buildingsPlaced: { sawmill: false, workshop: false, recruiter: false } },
     clearings: context.stateFixture.clearings.map(clearing => ({ ...clearing,
       actions: clearing.id === 0 || clearing.id === 2 ? ['place_keep'] : [] })) };
-  run('app.state = setupFixture; app.activeAction = null; app.selected = null; render(); selectClearing(0)');
-  assert.equal(run('app.selected'), null, 'Setup also requires choosing an action before the map');
+  context.fetch = async (_url, options) => {
+    requests.push(Object.fromEntries(options.body));
+    return { ok: true, json: async () => ({ ok: true, state: { ...context.setupFixture, revision: 6 } }) };
+  };
+  run('app.state = { ...stateFixture, status: "waiting" }; app.activeAction = null; app.busy = false;');
+  await run('startGame()');
+  assert.equal(run('app.busy'), false, 'Starting the game must release the synchronization lock');
+  assert.equal(run('app.activeAction'), 'place_keep', 'Starting setup must immediately enable Keep placement');
+  assert.doesNotMatch(nodes.get('phase-actions').innerHTML, /disabled/, 'Keep placement must not stay disabled after Start game');
+  run('app.state = setupFixture; app.activeAction = null; app.selected = null; render();');
+  assert.equal(run('app.activeAction'), 'place_keep', 'A sole setup placement must be selected automatically');
   assert.equal(nodes.get('phase-button').classList.contains('hidden'), true, 'Setup cannot be skipped with Next phase');
   assert.match(nodes.get('phase-actions').innerHTML, /Place Keep/);
-  run('selectAction("place_keep"); selectClearing(1)');
+  run('selectClearing(1)');
   assert.equal(run('app.selected'), null, 'Setup must reject a non-corner before selection');
   run('selectClearing(2)');
-  assert.equal(run('app.selected'), 2, 'A legal corner must open the placement confirmation');
-  assert.equal(nodes.get('special-primary-button').dataset.action, 'place_keep');
+  await new Promise(resolve => setTimeout(resolve, 10));
+  assert.equal(requests.at(-1).action, 'place_keep', 'Clicking a legal corner must place the Keep directly');
+  assert.equal(requests.at(-1).clearing, '2');
+  run('app.state = { ...setupFixture, activeFaction: "Eyrie Dynasties", phaseActions: [] }; app.activeAction = null; render(); selectClearing(0)');
+  assert.equal(run('app.activeAction'), null, 'A player who is waiting for Cats must not enter Keep placement mode');
+  assert.equal(requests.at(-1).clearing, '2', 'A waiting player must not send a setup action');
+
+  context.roostFixture = { ...context.setupFixture, revision: 7, you: 'Eyrie Dynasties',
+    activeFaction: 'Eyrie Dynasties', phaseActions: ['place_roost'],
+    setup: { ...context.setupFixture.setup, step: 'place_roost', keep: 0 },
+    factionState: { type: 'eyrie', leader: '', deposedLeaders: [],
+      decree: { Recruit: [], Move: [], Battle: [], Build: [] } },
+    clearings: context.setupFixture.clearings.map(clearing => ({ ...clearing,
+      pieces: { ...clearing.pieces, 'Eyrie Dynasties': { warriors: 0, buildings: 0, tokens: 0 } },
+      actions: clearing.id === 2 ? ['place_roost'] : [] })) };
+  context.fetch = async (_url, options) => {
+    if (options.method === 'GET') {
+      return { ok: true, json: async () => ({ ok: true, state: context.roostFixture }) };
+    }
+    requests.push(Object.fromEntries(options.body));
+    return { ok: true, json: async () => ({ ok: true, state: context.roostFixture }) };
+  };
+  run('app.state = { ...roostFixture, revision: 6, activeFaction: "Marquise de Cat", phaseActions: [] }; app.activeAction = null; app.busy = false; app.polling = false;');
+  await run('refreshState()');
+  assert.equal(run('app.busy'), false, 'Polling a setup handoff must release the synchronization lock');
+  assert.equal(run('app.activeAction'), 'place_roost', 'Eyrie must enter Roost placement after Cats finish setup');
+  assert.doesNotMatch(nodes.get('phase-actions').innerHTML, /disabled/, 'Roost placement must not stay disabled after polling');
+  const requestsBeforeInvalidRoost = requests.length;
+  run('selectClearing(1)');
+  assert.equal(requests.length, requestsBeforeInvalidRoost, 'A non-opposite clearing must not send Roost placement');
+  run('selectClearing(2)');
+  await new Promise(resolve => setTimeout(resolve, 10));
+  assert.equal(requests.at(-1).action, 'place_roost', 'Clicking the opposite corner must place the Roost directly');
+  assert.equal(requests.at(-1).clearing, '2');
   await run('presentState({ ...app.state, phase: "Birdsong", status: "playing", phaseActions: ["produce_wood"], canAdvance: false })');
   assert.equal(run('app.activeAction'), null, 'Finishing setup clears the setup action mode');
   assert.equal(run('app.selected'), null);

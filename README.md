@@ -68,6 +68,21 @@ For LAN play, keep the server running and open `http://<server-ip>:8080` on the
 other devices. The server listens on all network interfaces; the firewall must
 allow inbound TCP traffic on the selected port.
 
+## QA
+
+Run the fast C++ and browser regression suite after every code change:
+
+```sh
+make test
+```
+
+Before sharing a build, run the full QA suite. It starts a temporary server on a
+free local port and exercises a four-player LAN game in addition to unit tests:
+
+```sh
+make qa
+```
+
 The server is authoritative: clients submit actions, while C++ validates turns,
 movement, battle, dice, scoring, card draws, and state revisions. Rooms are kept
 in memory and support two to four players using the four base-game factions.
