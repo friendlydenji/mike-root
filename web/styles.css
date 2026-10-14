@@ -32,6 +32,7 @@ button:disabled { cursor: not-allowed; opacity: .45; }
 
 .lobby {
   min-height: 100vh;
+  min-height: 100dvh;
   display: grid;
   grid-template-columns: minmax(280px, 1.1fr) minmax(320px, .9fr);
   background: var(--forest);
@@ -99,6 +100,7 @@ input {
   border-radius: 4px;
   background: var(--white);
   color: var(--ink);
+  scroll-margin-block: 24vh;
 }
 
 input:focus, button:focus-visible { outline: 3px solid rgba(211,166,45,.48); outline-offset: 1px; }
@@ -637,7 +639,12 @@ button[type="submit"], .phase-button, #start-game-button {
   .brand-block { min-height: 280px; padding: 38px 24px; justify-content: flex-end; }
   h1 { font-size: 76px; }
   .brand-copy { margin-top: 18px; font-size: 16px; }
-  .lobby-actions { padding: 20px; }
+  .lobby-actions { padding: 20px 20px calc(20px + env(safe-area-inset-bottom)); justify-content: flex-start; }
+  .lobby:focus-within .brand-block { min-height: 104px; padding: 18px 24px; justify-content: center; }
+  .lobby:focus-within .edition, .lobby:focus-within .brand-copy { display: none; }
+  .lobby:focus-within h1 { font-size: 42px; line-height: 1; }
+  .lobby:focus-within .lobby-actions { padding-top: 12px; }
+  .lobby-form button[type="submit"] { min-height: 46px; }
   .topbar { padding: 10px 12px; }
   .wordmark { font-size: 23px; }
   .game-layout { min-height: 0; }

@@ -162,7 +162,7 @@ const app = {
 };
 
 const elements = Object.fromEntries([
-  "lobby", "game", "create-form", "join-form", "room-code-button", "table-status",
+  "lobby", "game", "create-form", "create-name", "join-form", "join-name", "room-code", "room-code-button", "table-status",
   "active-label", "actions-label", "seat-count", "players", "event-text", "board",
   "waiting", "waiting-code", "waiting-actions", "waiting-note", "start-game-button",
   "phase-button", "leave-button", "toast", "hand-panel", "hand-cards", "hand-count",
@@ -1133,6 +1133,20 @@ function escapeHtml(value) {
     "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;"
   })[character]);
 }
+
+const lobbyInputs = [elements["create-name"], elements["join-name"], elements["room-code"]];
+
+function keepLobbyInputVisible(input) {
+  if (!input?.scrollIntoView) return;
+  const scroll = () => input.scrollIntoView({ block: "center", inline: "nearest" });
+  if (window.requestAnimationFrame) window.requestAnimationFrame(scroll);
+  else scroll();
+}
+
+lobbyInputs.forEach(input => input.addEventListener("focus", () => keepLobbyInputVisible(input)));
+window.visualViewport?.addEventListener("resize", () => {
+  if (lobbyInputs.includes(document.activeElement)) keepLobbyInputVisible(document.activeElement);
+});
 
 elements["create-form"].addEventListener("submit", createRoom);
 elements["join-form"].addEventListener("submit", joinRoom);

@@ -16,8 +16,9 @@ for (const match of html.matchAll(/\bid="([^"]+)"/g)) {
         if (enabled) classes.add(name); else classes.delete(name);
       }
     },
-    dataset: {}, listeners: {}, textContent: '', innerHTML: '', value: '1', open: false,
+    dataset: {}, listeners: {}, textContent: '', innerHTML: '', value: '1', open: false, scrollOptions: null,
     addEventListener(name, handler) { this.listeners[name] = handler; },
+    scrollIntoView(options) { this.scrollOptions = options; },
     querySelectorAll() { return []; }, querySelector() { return null; },
     replaceChildren() { this.innerHTML = ''; },
     showModal() { this.open = true; }, close() { this.open = false; }
@@ -25,10 +26,15 @@ for (const match of html.matchAll(/\bid="([^"]+)"/g)) {
 }
 
 const requests = [];
+const viewportListeners = {};
 const context = vm.createContext({
-  document: { getElementById: id => nodes.get(id), querySelectorAll: () => [] },
+  document: { getElementById: id => nodes.get(id), querySelectorAll: () => [], activeElement: null },
   localStorage: { getItem: () => null, setItem() {}, removeItem() {} },
-  window: { clearTimeout() {}, clearInterval() {}, setInterval() {}, setTimeout: callback => setTimeout(callback, 0) },
+  window: {
+    clearTimeout() {}, clearInterval() {}, setInterval() {}, setTimeout: callback => setTimeout(callback, 0),
+    requestAnimationFrame: callback => callback(),
+    visualViewport: { addEventListener: (name, handler) => { viewportListeners[name] = handler; } }
+  },
   URLSearchParams,
   navigator: {},
   fetch: async (url, options) => {
@@ -37,6 +43,16 @@ const context = vm.createContext({
   }
 });
 vm.runInContext(fs.readFileSync('web/app.js', 'utf8'), context);
+
+nodes.get('join-name').listeners.focus();
+assert.equal(nodes.get('join-name').scrollOptions?.block, 'center',
+  'Focusing a lobby field must reveal it above the mobile keyboard');
+assert.equal(nodes.get('join-name').scrollOptions?.inline, 'nearest');
+context.document.activeElement = nodes.get('room-code');
+viewportListeners.resize();
+assert.equal(nodes.get('room-code').scrollOptions?.block, 'center',
+  'Keyboard viewport changes must keep the active lobby field visible');
+assert.equal(nodes.get('room-code').scrollOptions?.inline, 'nearest');
 
 const run = code => vm.runInContext(code, context);
 const plain = value => JSON.parse(JSON.stringify(value));
