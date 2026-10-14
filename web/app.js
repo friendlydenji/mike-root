@@ -1135,18 +1135,42 @@ function escapeHtml(value) {
 }
 
 const lobbyInputs = [elements["create-name"], elements["join-name"], elements["room-code"]];
+const joinInputs = [elements["join-name"], elements["room-code"]];
 
 function keepLobbyInputVisible(input) {
   if (!input?.scrollIntoView) return;
-  const scroll = () => input.scrollIntoView({ block: "center", inline: "nearest" });
-  if (window.requestAnimationFrame) window.requestAnimationFrame(scroll);
-  else scroll();
+  const scroll = () => {
+    input.scrollIntoView({ block: "center", inline: "nearest" });
+    const viewport = window.visualViewport;
+    if (!viewport || !input.getBoundingClientRect || !window.scrollBy) return;
+    const bounds = input.getBoundingClientRect();
+    const visibleTop = viewport.offsetTop + 16;
+    const visibleBottom = viewport.offsetTop + viewport.height - 24;
+    const adjustment = bounds.bottom > visibleBottom ? bounds.bottom - visibleBottom
+      : bounds.top < visibleTop ? bounds.top - visibleTop : 0;
+    if (adjustment) window.scrollBy({ top: adjustment, left: 0, behavior: "auto" });
+  };
+  const schedule = callback => window.requestAnimationFrame ? window.requestAnimationFrame(callback) : callback();
+  schedule(scroll);
+  for (const delay of [120, 320]) window.setTimeout(() => schedule(scroll), delay);
 }
 
-lobbyInputs.forEach(input => input.addEventListener("focus", () => keepLobbyInputVisible(input)));
-window.visualViewport?.addEventListener("resize", () => {
+function syncKeyboardViewport() {
+  const viewport = window.visualViewport;
+  const keyboardInset = viewport
+    ? Math.max(0, (window.innerHeight || viewport.height) - viewport.height - viewport.offsetTop) : 0;
+  document.documentElement?.style?.setProperty("--keyboard-inset", `${Math.round(keyboardInset)}px`);
   if (lobbyInputs.includes(document.activeElement)) keepLobbyInputVisible(document.activeElement);
-});
+}
+
+lobbyInputs.forEach(input => input.addEventListener("focus", () => {
+  elements.lobby.classList.toggle("joining", joinInputs.includes(input));
+  syncKeyboardViewport();
+  keepLobbyInputVisible(input);
+}));
+window.visualViewport?.addEventListener("resize", syncKeyboardViewport);
+window.visualViewport?.addEventListener("scroll", syncKeyboardViewport);
+window.addEventListener?.("resize", syncKeyboardViewport);
 
 elements["create-form"].addEventListener("submit", createRoom);
 elements["join-form"].addEventListener("submit", joinRoom);

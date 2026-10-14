@@ -1,5 +1,6 @@
 :root {
   color-scheme: light;
+  --keyboard-inset: 0px;
   --forest: #173f35;
   --forest-deep: #0d2b25;
   --moss: #597b52;
@@ -639,7 +640,8 @@ button[type="submit"], .phase-button, #start-game-button {
   .brand-block { min-height: 280px; padding: 38px 24px; justify-content: flex-end; }
   h1 { font-size: 76px; }
   .brand-copy { margin-top: 18px; font-size: 16px; }
-  .lobby-actions { padding: 20px 20px calc(20px + env(safe-area-inset-bottom)); justify-content: flex-start; }
+  .lobby-actions { padding: 20px 20px calc(20px + env(safe-area-inset-bottom) + var(--keyboard-inset)); justify-content: flex-start; }
+  .lobby.joining #create-form { display: none; }
   .lobby:focus-within .brand-block { min-height: 104px; padding: 18px 24px; justify-content: center; }
   .lobby:focus-within .edition, .lobby:focus-within .brand-copy { display: none; }
   .lobby:focus-within h1 { font-size: 42px; line-height: 1; }

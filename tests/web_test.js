@@ -17,8 +17,10 @@ for (const match of html.matchAll(/\bid="([^"]+)"/g)) {
       }
     },
     dataset: {}, listeners: {}, textContent: '', innerHTML: '', value: '1', open: false, scrollOptions: null,
+    rect: { top: 100, bottom: 142 },
     addEventListener(name, handler) { this.listeners[name] = handler; },
     scrollIntoView(options) { this.scrollOptions = options; },
+    getBoundingClientRect() { return this.rect; },
     querySelectorAll() { return []; }, querySelector() { return null; },
     replaceChildren() { this.innerHTML = ''; },
     showModal() { this.open = true; }, close() { this.open = false; }
@@ -27,13 +29,20 @@ for (const match of html.matchAll(/\bid="([^"]+)"/g)) {
 
 const requests = [];
 const viewportListeners = {};
+const rootStyle = {};
+let lastScroll = null;
 const context = vm.createContext({
-  document: { getElementById: id => nodes.get(id), querySelectorAll: () => [], activeElement: null },
+  document: {
+    getElementById: id => nodes.get(id), querySelectorAll: () => [], activeElement: null,
+    documentElement: { style: { setProperty: (name, value) => { rootStyle[name] = value; } } }
+  },
   localStorage: { getItem: () => null, setItem() {}, removeItem() {} },
   window: {
     clearTimeout() {}, clearInterval() {}, setInterval() {}, setTimeout: callback => setTimeout(callback, 0),
     requestAnimationFrame: callback => callback(),
-    visualViewport: { addEventListener: (name, handler) => { viewportListeners[name] = handler; } }
+    innerHeight: 800,
+    scrollBy: options => { lastScroll = options; },
+    visualViewport: { height: 500, offsetTop: 0, addEventListener: (name, handler) => { viewportListeners[name] = handler; } }
   },
   URLSearchParams,
   navigator: {},
@@ -48,11 +57,19 @@ nodes.get('join-name').listeners.focus();
 assert.equal(nodes.get('join-name').scrollOptions?.block, 'center',
   'Focusing a lobby field must reveal it above the mobile keyboard');
 assert.equal(nodes.get('join-name').scrollOptions?.inline, 'nearest');
+assert.equal(nodes.get('lobby').classList.contains('joining'), true,
+  'Joining on mobile must collapse the unrelated Create form');
 context.document.activeElement = nodes.get('room-code');
+nodes.get('room-code').rect = { top: 460, bottom: 502 };
 viewportListeners.resize();
 assert.equal(nodes.get('room-code').scrollOptions?.block, 'center',
   'Keyboard viewport changes must keep the active lobby field visible');
 assert.equal(nodes.get('room-code').scrollOptions?.inline, 'nearest');
+assert.equal(rootStyle['--keyboard-inset'], '300px', 'The lobby must reserve the keyboard overlay height');
+assert.equal(lastScroll?.top, 26, 'A covered Room Code field must be moved above the visual viewport edge');
+nodes.get('create-name').listeners.focus();
+assert.equal(nodes.get('lobby').classList.contains('joining'), false,
+  'Switching to Create must restore its form');
 
 const run = code => vm.runInContext(code, context);
 const plain = value => JSON.parse(JSON.stringify(value));
