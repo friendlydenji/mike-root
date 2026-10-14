@@ -42,7 +42,7 @@ const context = vm.createContext({
     requestAnimationFrame: callback => callback(),
     innerHeight: 800,
     scrollBy: options => { lastScroll = options; },
-    visualViewport: { height: 500, offsetTop: 0, addEventListener: (name, handler) => { viewportListeners[name] = handler; } }
+    visualViewport: { height: 800, offsetTop: 0, addEventListener: (name, handler) => { viewportListeners[name] = handler; } }
   },
   URLSearchParams,
   navigator: {},
@@ -53,13 +53,16 @@ const context = vm.createContext({
 });
 vm.runInContext(fs.readFileSync('web/app.js', 'utf8'), context);
 
+context.document.activeElement = nodes.get('join-name');
 nodes.get('join-name').listeners.focus();
 assert.equal(nodes.get('join-name').scrollOptions?.block, 'center',
   'Focusing a lobby field must reveal it above the mobile keyboard');
 assert.equal(nodes.get('join-name').scrollOptions?.inline, 'nearest');
 assert.equal(nodes.get('lobby').classList.contains('joining'), true,
-  'Joining on mobile must collapse the unrelated Create form');
+  'Joining on mobile must bring the Join form before Create');
 context.document.activeElement = nodes.get('room-code');
+nodes.get('room-code').listeners.focus();
+context.window.visualViewport.height = 500;
 nodes.get('room-code').rect = { top: 460, bottom: 502 };
 viewportListeners.resize();
 assert.equal(nodes.get('room-code').scrollOptions?.block, 'center',
@@ -67,6 +70,12 @@ assert.equal(nodes.get('room-code').scrollOptions?.block, 'center',
 assert.equal(nodes.get('room-code').scrollOptions?.inline, 'nearest');
 assert.equal(rootStyle['--keyboard-inset'], '300px', 'The lobby must reserve the keyboard overlay height');
 assert.equal(lastScroll?.top, 26, 'A covered Room Code field must be moved above the visual viewport edge');
+context.window.visualViewport.height = 800;
+viewportListeners.resize();
+assert.equal(nodes.get('lobby').classList.contains('joining'), false,
+  'Dismissing the keyboard must restore Create first even if Room Code keeps focus');
+assert.equal(rootStyle['--keyboard-inset'], '0px', 'Closing the keyboard must clear the reserved space');
+context.document.activeElement = nodes.get('create-name');
 nodes.get('create-name').listeners.focus();
 assert.equal(nodes.get('lobby').classList.contains('joining'), false,
   'Switching to Create must restore its form');
@@ -108,6 +117,30 @@ run('selectClearing(0)');
 assert.equal(run('app.moveOrigin'), null, 'Clicking the origin must cancel the move');
 
 (async () => {
+  context.document.activeElement = nodes.get('join-name');
+  nodes.get('join-name').value = 'Returning player';
+  nodes.get('room-code').value = 'ROOM12';
+  nodes.get('join-name').listeners.focus();
+  nodes.get('join-name').listeners.blur();
+  context.document.activeElement = nodes.get('room-code');
+  nodes.get('room-code').listeners.focus();
+  await new Promise(resolve => setTimeout(resolve, 10));
+  assert.equal(nodes.get('lobby').classList.contains('joining'), true,
+    'Moving between Join fields must keep the Join form first');
+  run('keepLobbyInputVisible(elements["room-code"])');
+  const scrollBeforeBlur = lastScroll;
+  nodes.get('room-code').scrollOptions = null;
+  nodes.get('room-code').listeners.blur();
+  context.document.activeElement = null;
+  await new Promise(resolve => setTimeout(resolve, 10));
+  assert.equal(nodes.get('lobby').classList.contains('joining'), false,
+    'Leaving the Join fields must restore the normal lobby order');
+  assert.equal(nodes.get('room-code').scrollOptions, null,
+    'Delayed keyboard callbacks must not scroll back to an input after leaving it');
+  assert.equal(lastScroll, scrollBeforeBlur, 'Leaving an input must stop keyboard scroll adjustments');
+  assert.equal(nodes.get('join-name').value, 'Returning player', 'Restoring the lobby must preserve the entered name');
+  assert.equal(nodes.get('room-code').value, 'ROOM12', 'Restoring the lobby must preserve the entered room code');
+
   run('selectClearing(0)');
   assert.equal(nodes.get('warrior-count').max, 2, 'Move quantity must match warriors at the origin');
   assert.equal(nodes.get('warrior-selected').textContent, '1 / 2');

@@ -1136,10 +1136,14 @@ function escapeHtml(value) {
 
 const lobbyInputs = [elements["create-name"], elements["join-name"], elements["room-code"]];
 const joinInputs = [elements["join-name"], elements["room-code"]];
+let lobbyEditingInput = null;
+let lobbyViewportHeight = window.visualViewport?.height || window.innerHeight || 0;
+let lobbyKeyboardOpen = false;
 
 function keepLobbyInputVisible(input) {
   if (!input?.scrollIntoView) return;
   const scroll = () => {
+    if (document.activeElement !== input || lobbyEditingInput !== input || elements.lobby.classList.contains("hidden")) return;
     input.scrollIntoView({ block: "center", inline: "nearest" });
     const viewport = window.visualViewport;
     if (!viewport || !input.getBoundingClientRect || !window.scrollBy) return;
@@ -1157,19 +1161,35 @@ function keepLobbyInputVisible(input) {
 
 function syncKeyboardViewport() {
   const viewport = window.visualViewport;
+  const viewportHeight = viewport?.height || window.innerHeight || lobbyViewportHeight;
+  const input = lobbyInputs.includes(document.activeElement) ? document.activeElement : null;
+  // Some mobile browsers keep the input focused after the keyboard is dismissed.
+  const keyboardOpen = Boolean(input && lobbyViewportHeight - viewportHeight > 100);
+  const keyboardClosed = lobbyKeyboardOpen && !keyboardOpen;
+  lobbyKeyboardOpen = keyboardOpen;
+  if (!input || keyboardClosed || elements.lobby.classList.contains("hidden")) {
+    lobbyEditingInput = null;
+    elements.lobby.classList.remove("joining");
+    document.documentElement?.style?.setProperty("--keyboard-inset", "0px");
+    lobbyViewportHeight = viewportHeight;
+    return;
+  }
   const keyboardInset = viewport
     ? Math.max(0, (window.innerHeight || viewport.height) - viewport.height - viewport.offsetTop) : 0;
   document.documentElement?.style?.setProperty("--keyboard-inset", `${Math.round(keyboardInset)}px`);
-  if (lobbyInputs.includes(document.activeElement)) keepLobbyInputVisible(document.activeElement);
+  if (lobbyEditingInput === input) keepLobbyInputVisible(input);
 }
 
-lobbyInputs.forEach(input => input.addEventListener("focus", () => {
-  elements.lobby.classList.toggle("joining", joinInputs.includes(input));
-  syncKeyboardViewport();
-  keepLobbyInputVisible(input);
-}));
+lobbyInputs.forEach(input => {
+  input.addEventListener("focus", () => {
+    if (!lobbyEditingInput) lobbyViewportHeight = window.visualViewport?.height || window.innerHeight || 0;
+    lobbyEditingInput = input;
+    elements.lobby.classList.toggle("joining", joinInputs.includes(input));
+    syncKeyboardViewport();
+  });
+  input.addEventListener("blur", () => window.setTimeout(syncKeyboardViewport, 0));
+});
 window.visualViewport?.addEventListener("resize", syncKeyboardViewport);
-window.visualViewport?.addEventListener("scroll", syncKeyboardViewport);
 window.addEventListener?.("resize", syncKeyboardViewport);
 
 elements["create-form"].addEventListener("submit", createRoom);
